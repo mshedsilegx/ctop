@@ -209,12 +209,13 @@ func (cm *Docker) inspect(id string) (insp *api.Container, found bool, failed bo
 }
 
 func calcUptime(insp *api.Container) string {
-	endTime := insp.State.FinishedAt
-	if endTime.IsZero() || insp.State.Running {
-		endTime = time.Now()
+	if insp.State.Running {
+		endTime := time.Now()
+		uptime := endTime.Sub(insp.State.StartedAt)
+		return durafmt.Parse(uptime).LimitFirstN(1).String()
+	} else {
+		return insp.State.Status
 	}
-	uptime := endTime.Sub(insp.State.StartedAt)
-	return durafmt.Parse(uptime).LimitFirstN(1).String()
 }
 
 // Mark all container IDs for refresh

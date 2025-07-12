@@ -11,7 +11,7 @@ require (
 	github.com/nsf/termbox-go v1.1.1
 	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
-	github.com/opencontainers/runc v1.1.0
+	github.com/opencontainers/runc v1.1.15
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/pkg/errors v0.9.1
 )

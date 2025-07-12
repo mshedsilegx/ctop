@@ -84,8 +84,8 @@ func (c *Runc) run() {
 	c.running = false
 }
 
-func (c *Runc) ReadCPU(stats *cgroups.Stats) {
-	u := stats.CpuStats.CpuUsage
+func (c *Runc) ReadCPU(stats *libcontainer.Stats) {
+	u := stats.CgroupStats.CpuStats.CpuUsage
 	ncpus := uint8(len(u.PercpuUsage))
 	total := float64(u.TotalUsage)
 	system := float64(getSysCPUUsage())

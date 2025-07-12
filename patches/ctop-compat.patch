@@ -1,0 +1,33 @@
+--- ./connector/docker.go.dist    2022-03-30 13:13:10.000000000 -0500
++++ ./connector/docker.go 2022-04-22 19:28:12.038114026 -0500
+@@ -209,12 +209,13 @@
+ }
+
+ func calcUptime(insp *api.Container) string {
+-       endTime := insp.State.FinishedAt
+-       if endTime.IsZero() || insp.State.Running {
+-               endTime = time.Now()
++       if insp.State.Running {
++               endTime := time.Now()
++               uptime := endTime.Sub(insp.State.StartedAt)
++               return durafmt.Parse(uptime).LimitFirstN(1).String()
++       } else {
++               return insp.State.Status
+        }
+-       uptime := endTime.Sub(insp.State.StartedAt)
+-       return durafmt.Parse(uptime).LimitFirstN(1).String()
+ }
+
+ // Mark all container IDs for refresh
+
+--- connector/collector/docker_logs.go.dist     2021-07-01 14:32:32.000000000 -0500
++++ connector/collector/docker_logs.go  2021-08-19 19:24:51.707494426 -0500
+@@ -37,7 +37,7 @@
+                //ErrorStream:  w,
+                Stdout:      true,
+                Stderr:      true,
+-               Tail:        "20",
++               Tail:        "100",
+                Follow:      true,
+                Timestamps:  true,
+                RawTerminal: true,

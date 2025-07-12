@@ -118,7 +118,7 @@ func (c *Runc) ReadNet(interfaces []*types.NetworkInterface) {
 	c.NetRx, c.NetTx = rx, tx
 }
 
-func (c *Runc) ReadIO(stats *libcontainer.Stats) {
+func (c *Runc) ReadIO(stats *cgroups.Stats) {
 	var read, write int64
 	for _, blk := range stats.CgroupStats.BlkioStats.IoServiceBytesRecursive {
 		if blk.Op == "Read" {

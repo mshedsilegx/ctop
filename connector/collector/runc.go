@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/opencontainers/runc/libcontainer"
-	"github.com/opencontainers/runc/libcontainer/cgroups"
 	"github.com/opencontainers/runc/types"
 
 	"github.com/bcicen/ctop/models"
@@ -101,9 +100,9 @@ func (c *Runc) ReadCPU(stats *cgroups.Stats) {
 	c.Pids = int(stats.PidsStats.Current)
 }
 
-func (c *Runc) ReadMem(stats *cgroups.Stats) {
-	c.MemUsage = int64(stats.MemoryStats.Usage.Usage)
-	c.MemLimit = int64(stats.MemoryStats.Usage.Limit)
+func (c *Runc) ReadMem(stats *libcontainer.Stats) {
+	c.MemUsage = int64(stats.CgroupStats.MemoryStats.Usage.Usage)
+	c.MemLimit = int64(stats.CgroupStats.MemoryStats.Usage.Limit)
 	if c.MemLimit > sysMemTotal && sysMemTotal > 0 {
 		c.MemLimit = sysMemTotal
 	}
@@ -119,9 +118,9 @@ func (c *Runc) ReadNet(interfaces []*types.NetworkInterface) {
 	c.NetRx, c.NetTx = rx, tx
 }
 
-func (c *Runc) ReadIO(stats *cgroups.Stats) {
+func (c *Runc) ReadIO(stats *libcontainer.Stats) {
 	var read, write int64
-	for _, blk := range stats.BlkioStats.IoServiceBytesRecursive {
+	for _, blk := range stats.CgroupStats.BlkioStats.IoServiceBytesRecursive {
 		if blk.Op == "Read" {
 			read = int64(blk.Value)
 		}

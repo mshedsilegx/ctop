@@ -11,7 +11,7 @@ require (
 	github.com/nsf/termbox-go v1.1.1
 	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
-	github.com/opencontainers/runc v1.1.11
+	github.com/opencontainers/runc v1.1.14
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/pkg/errors v0.9.1
 )
@@ -24,7 +24,6 @@ require (
 	github.com/containerd/console v1.0.5 // indirect
 	github.com/containerd/log v0.1.0 // indirect
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
-	github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d // indirect
 	github.com/cyphar/filepath-securejoin v0.4.1 // indirect
 	github.com/docker/docker v28.3.2+incompatible // indirect
 	github.com/docker/go-connections v0.5.0 // indirect
@@ -50,17 +49,13 @@ require (
 	github.com/opencontainers/selinux v1.12.0 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
-	github.com/russross/blackfriday/v2 v2.0.1 // indirect
 	github.com/seccomp/libseccomp-golang v0.11.0 // indirect
-	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/syndtr/gocapability v0.0.0-20200815063812-42c35b437635 // indirect
-	github.com/urfave/cli v1.22.1 // indirect
 	github.com/vishvananda/netlink v1.3.1 // indirect
 	github.com/vishvananda/netns v0.0.5 // indirect
 	golang.org/x/exp v0.0.0-20230224173230-c95f2b4c22f2 // indirect
 	golang.org/x/net v0.42.0 // indirect
-	golang.org/x/sync v0.16.0 // indirect
 	golang.org/x/sys v0.34.0 // indirect
 	google.golang.org/protobuf v1.36.6 // indirect
 )
@@ -69,4 +64,4 @@ go 1.23.0
 
 toolchain go1.24.5
 
-replace github.com/opencontainers/runc => github.com/opencontainers/runc v1.1.12
+replace github.com/opencontainers/runc => github.com/opencontainers/runc v1.1.14

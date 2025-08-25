@@ -3,7 +3,7 @@ module github.com/bcicen/ctop
 require (
 	github.com/BurntSushi/toml v1.5.0
 	github.com/c9s/goprocinfo v0.0.0-20210130143923-c95fcf8c64a8
-	github.com/fsouza/go-dockerclient v1.12.1
+	github.com/fsouza/go-dockerclient v1.12.2
 	github.com/gizak/termui v2.3.1-0.20180817033724-8d4faad06196+incompatible
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
 	github.com/jgautheron/codename-generator v0.0.0-20150829203204-16d037c7cc3c
@@ -26,7 +26,7 @@ require (
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
 	github.com/creack/pty v1.1.24 // indirect
 	github.com/cyphar/filepath-securejoin v0.4.1 // indirect
-	github.com/docker/docker v28.3.2+incompatible // indirect
+	github.com/docker/docker v28.3.3+incompatible // indirect
 	github.com/docker/go-connections v0.5.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
 	github.com/frankban/quicktest v1.14.6 // indirect
@@ -59,11 +59,11 @@ require (
 	github.com/vishvananda/netns v0.0.5 // indirect
 	golang.org/x/exp v0.0.0-20230224173230-c95f2b4c22f2 // indirect
 	golang.org/x/net v0.42.0 // indirect
-	golang.org/x/sys v0.34.0 // indirect
+	golang.org/x/sys v0.35.0 // indirect
 	google.golang.org/protobuf v1.36.6 // indirect
 )
 
-go 1.23.0
+go 1.24.0
 
 toolchain go1.24.5
 

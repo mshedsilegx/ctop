@@ -7,7 +7,7 @@ require (
 	github.com/gizak/termui v2.3.1-0.20180817033724-8d4faad06196+incompatible
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
 	github.com/jgautheron/codename-generator v0.0.0-20150829203204-16d037c7cc3c
-	github.com/mattn/go-runewidth v0.0.16
+	github.com/mattn/go-runewidth v0.0.17
 	github.com/nsf/termbox-go v1.1.1
 	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7

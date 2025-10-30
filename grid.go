@@ -127,7 +127,9 @@ func Display() bool {
 	// initial draw
 	header.Align()
 	status.Align()
-	cursor.RefreshContainers()
+	if _, err := cursor.RefreshContainers(); err != nil {
+		log.Errorf("failed to refresh containers: %s", err)
+	}
 	RedrawRows(true)
 
 	HandleKeys("up", cursor.Up)

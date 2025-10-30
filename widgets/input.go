@@ -47,8 +47,8 @@ func (i *Input) Buffer() ui.Buffer {
 	var cell ui.Cell
 	buf := i.Block.Buffer()
 
-	x := i.Block.X + i.padding[0]
-	y := i.Block.Y + 1
+	x := i.X + i.padding[0]
+	y := i.Y + 1
 	for _, ch := range i.Data {
 		cell = ui.Cell{Ch: ch, Fg: i.TextFgColor, Bg: i.TextBgColor}
 		buf.Set(x, y, cell)
@@ -64,7 +64,7 @@ func (i *Input) Stream() chan string {
 }
 
 func (i *Input) KeyPress(e ui.Event) {
-	ch := strings.Replace(e.Path, "/sys/kbd/", "", -1)
+	ch := strings.ReplaceAll(e.Path, "/sys/kbd/", "")
 	if ch == "C-8" {
 		idx := len(i.Data) - 1
 		if idx > -1 {

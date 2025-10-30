@@ -1,5 +1,4 @@
 //go:build !release
-// +build !release
 
 package connector
 
@@ -30,14 +29,14 @@ func NewMock() (Connector, error) {
 
 // Create Mock containers
 func (cs *Mock) Init() {
-	rand.Seed(int64(time.Now().Nanosecond()))
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	for i := 0; i < 4; i++ {
-		cs.makeContainer(3, true)
+		cs.makeContainer(r, 3, true)
 	}
 
 	for i := 0; i < 16; i++ {
-		cs.makeContainer(1, false)
+		cs.makeContainer(r, 1, false)
 	}
 
 }
@@ -53,12 +52,12 @@ func (cs *Mock) Wait() struct{} {
 
 var healthStates = []string{"starting", "healthy", "unhealthy"}
 
-func (cs *Mock) makeContainer(aggression int64, health bool) {
+func (cs *Mock) makeContainer(r *rand.Rand, aggression int64, health bool) {
 	collector := collector.NewMock(aggression)
 	manager := manager.NewMock()
 	c := container.New(makeID(), collector, manager)
 	c.SetMeta("name", makeName())
-	c.SetState(makeState())
+	c.SetState(makeState(r))
 	if health {
 		var i int
 		c.SetMeta("health", healthStates[i])
@@ -77,12 +76,13 @@ func (cs *Mock) makeContainer(aggression int64, health bool) {
 }
 
 func (cs *Mock) Loop() {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	iter := 0
 	for {
 		// Change state for random container
 		if iter%5 == 0 && len(cs.containers) > 0 {
-			randC := cs.containers[rand.Intn(len(cs.containers))]
-			randC.SetState(makeState())
+			randC := cs.containers[r.Intn(len(cs.containers))]
+			randC.SetState(makeState(r))
 		}
 		iter++
 		time.Sleep(3 * time.Second)
@@ -106,30 +106,12 @@ func (cs *Mock) All() container.Containers {
 	return cs.containers
 }
 
-// Remove containers by ID
-func (cs *Mock) delByID(id string) {
-	for n, c := range cs.containers {
-		if c.Id == id {
-			cs.del(n)
-			return
-		}
-	}
-}
-
-// Remove one or more containers by index
-func (cs *Mock) del(idx ...int) {
-	for _, i := range idx {
-		cs.containers = append(cs.containers[:i], cs.containers[i+1:]...)
-	}
-	log.Infof("removed %d dead containers", len(idx))
-}
-
 func makeID() string {
 	u, err := uuid.NewV4()
 	if err != nil {
 		panic(err)
 	}
-	return strings.Replace(u.String(), "-", "", -1)[:12]
+	return strings.ReplaceAll(u.String(), "-", "")[:12]
 }
 
 func makeName() string {
@@ -141,11 +123,11 @@ func makeName() string {
 	if err != nil {
 		panic(err)
 	}
-	return strings.Replace(n, "-", "_", -1)
+	return strings.ReplaceAll(n, "-", "_")
 }
 
-func makeState() string {
-	switch rand.Intn(10) {
+func makeState(r *rand.Rand) string {
+	switch r.Intn(10) {
 	case 0, 1, 2:
 		return "exited"
 	case 3:

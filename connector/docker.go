@@ -86,7 +86,9 @@ func (cm *Docker) watchEvents() {
 		"event": {"create", "start", "health_status", "pause", "unpause", "stop", "die", "destroy"},
 	},
 	}
-	cm.client.AddEventListenerWithOptions(opts, events)
+	if err := cm.client.AddEventListenerWithOptions(opts, events); err != nil {
+		log.Errorf("failed to add docker event listener: %s", err)
+	}
 
 	for e := range events {
 		actionName := e.Action
@@ -147,14 +149,12 @@ func webPort(ports map[api.Port][]api.PortBinding) string {
 		if len(v) == 0 {
 			continue
 		}
-		for _, binding := range v {
-			publishedIp := binding.HostIP
-			if publishedIp == "0.0.0.0" {
-				publishedIp = "localhost"
-			}
-			publishedWebPort := fmt.Sprintf("%s:%s", publishedIp, binding.HostPort)
-			return publishedWebPort
+		binding := v[0]
+		publishedIp := binding.HostIP
+		if publishedIp == "0.0.0.0" {
+			publishedIp = "localhost"
 		}
+		return fmt.Sprintf("%s:%s", publishedIp, binding.HostPort)
 	}
 	return ""
 }
@@ -196,7 +196,8 @@ func (cm *Docker) refresh(c *container.Container) {
 }
 
 func (cm *Docker) inspect(id string) (insp *api.Container, found bool, failed bool) {
-	c, err := cm.client.InspectContainer(id)
+	opts := api.InspectContainerOptions{ID: id}
+	c, err := cm.client.InspectContainerWithOptions(opts)
 	if err != nil {
 		if _, notFound := err.(*api.NoSuchContainer); notFound {
 			return c, false, false

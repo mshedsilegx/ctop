@@ -64,8 +64,8 @@ func (t *TextView) Buffer() ui.Buffer {
 	var cell ui.Cell
 	buf := t.Block.Buffer()
 
-	x := t.Block.X + t.padding[0]
-	y := t.Block.Y + t.padding[1]
+	x := t.X + t.padding[0]
+	y := t.Y + t.padding[1]
 
 	for _, line := range t.TextOut {
 		for _, ch := range line {
@@ -73,7 +73,7 @@ func (t *TextView) Buffer() ui.Buffer {
 			buf.Set(x, y, cell)
 			x = x + runewidth.RuneWidth(ch)
 		}
-		x = t.Block.X + t.padding[0]
+		x = t.X + t.padding[0]
 		y++
 	}
 	return buf

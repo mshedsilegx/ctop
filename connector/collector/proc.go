@@ -1,5 +1,4 @@
 //go:build linux
-// +build linux
 
 package collector
 
@@ -11,7 +10,7 @@ var sysMemTotal = getSysMemTotal()
 
 const (
 	clockTicksPerSecond  uint64 = 100
-	nanoSecondsPerSecond        = 1e9
+	nanoSecondsPerSecond uint64 = 1e9
 )
 
 func getSysMemTotal() int64 {

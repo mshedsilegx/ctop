@@ -17,21 +17,21 @@ import (
 type MenuFn func() MenuFn
 
 var helpDialog = []menu.Item{
-	{"<enter> - open container menu", ""},
-	{"", ""},
-	{"[a] - toggle display of all containers", ""},
-	{"[f] - filter displayed containers", ""},
-	{"[h] - open this help dialog", ""},
-	{"[H] - toggle ctop header", ""},
-	{"[s] - select container sort field", ""},
-	{"[r] - reverse container sort order", ""},
-	{"[o] - open single view", ""},
-	{"[l] - view container logs ([t] to toggle timestamp when open)", ""},
-	{"[e] - exec shell", ""},
-	{"[w] - open browser (first port is http)", ""},
-	{"[c] - configure columns", ""},
-	{"[S] - save current configuration to file", ""},
-	{"[q] - exit ctop", ""},
+	{Val: "<enter> - open container menu", Label: ""},
+	{Val: "", Label: ""},
+	{Val: "[a] - toggle display of all containers", Label: ""},
+	{Val: "[f] - filter displayed containers", Label: ""},
+	{Val: "[h] - open this help dialog", Label: ""},
+	{Val: "[H] - toggle ctop header", Label: ""},
+	{Val: "[s] - select container sort field", Label: ""},
+	{Val: "[r] - reverse container sort order", Label: ""},
+	{Val: "[o] - open single view", Label: ""},
+	{Val: "[l] - view container logs ([t] to toggle timestamp when open)", Label: ""},
+	{Val: "[e] - exec shell", Label: ""},
+	{Val: "[w] - open browser (first port is http)", Label: ""},
+	{Val: "[c] - configure columns", Label: ""},
+	{Val: "[S] - save current configuration to file", Label: ""},
+	{Val: "[q] - exit ctop", Label: ""},
 }
 
 func HelpMenu() MenuFn {
@@ -68,7 +68,9 @@ func FilterMenu() MenuFn {
 	go func() {
 		for s := range stream {
 			config.Update("filterStr", s)
-			RefreshDisplay()
+			if err := RefreshDisplay(); err != nil {
+				log.Errorf("failed to refresh display: %s", err)
+			}
 			ui.Render(i)
 		}
 	}()
@@ -97,7 +99,7 @@ func SortMenu() MenuFn {
 	m.BorderLabel = "Sort Field"
 
 	for _, field := range container.SortFields() {
-		m.AddItems(menu.Item{field, ""})
+		m.AddItems(menu.Item{Val: field, Label: ""})
 	}
 
 	// set cursor position to current sort field
@@ -153,7 +155,7 @@ func ColumnsMenu() MenuFn {
 			} else {
 				txt += disabledStr
 			}
-			m.AddItems(menu.Item{col.Name, txt})
+			m.AddItems(menu.Item{Val: col.Name, Label: txt})
 		}
 	}
 
@@ -397,7 +399,9 @@ func OpenInBrowser() MenuFn {
 		return nil
 	}
 	link := "http://" + webPort + "/"
-	browser.OpenURL(link)
+	if err := browser.OpenURL(link); err != nil {
+		log.Errorf("failed to open browser: %s", err)
+	}
 	return nil
 }
 
@@ -414,8 +418,8 @@ func Confirm(txt string, fn func()) MenuFn {
 		m.SubText = txt
 
 		items := []menu.Item{
-			menu.Item{Val: "cancel", Label: "[c]ancel"},
-			menu.Item{Val: "yes", Label: "[y]es"},
+			{Val: "cancel", Label: "[c]ancel"},
+			{Val: "yes", Label: "[y]es"},
 		}
 
 		var response bool

@@ -38,7 +38,7 @@ func StartServer() {
 		for {
 			conn, err := server.ln.Accept()
 			if err != nil {
-				if err, ok := err.(net.Error); ok && err.Temporary() {
+				if ne, ok := err.(net.Error); ok && ne.Timeout() {
 					continue
 				}
 				return
@@ -53,17 +53,27 @@ func StartServer() {
 func StopServer() {
 	server.wg.Wait()
 	if server.ln != nil {
-		server.ln.Close()
+		if err := server.ln.Close(); err != nil {
+			Log.Errorf("failed to close log server listener: %s", err)
+		}
 	}
 }
 
 func handler(wc io.WriteCloser) {
 	server.wg.Add(1)
 	defer server.wg.Done()
-	defer wc.Close()
+	defer func() {
+		if err := wc.Close(); err != nil {
+			Log.Errorf("failed to close log handler: %s", err)
+		}
+	}()
 	for msg := range Log.tail() {
 		msg = fmt.Sprintf("%s\n", msg)
-		wc.Write([]byte(msg))
+		if _, err := wc.Write([]byte(msg)); err != nil {
+			Log.Errorf("failed to write to log handler: %s", err)
+		}
 	}
-	wc.Write([]byte("bye\n"))
+	if _, err := wc.Write([]byte("bye\n")); err != nil {
+		Log.Errorf("failed to write to log handler: %s", err)
+	}
 }

@@ -68,7 +68,9 @@ func FilterMenu() MenuFn {
 	go func() {
 		for s := range stream {
 			config.Update("filterStr", s)
-			RefreshDisplay()
+			if err := RefreshDisplay(); err != nil {
+				log.Errorf("failed to refresh display: %s", err)
+			}
 			ui.Render(i)
 		}
 	}()
@@ -397,7 +399,9 @@ func OpenInBrowser() MenuFn {
 		return nil
 	}
 	link := "http://" + webPort + "/"
-	browser.OpenURL(link)
+	if err := browser.OpenURL(link); err != nil {
+		log.Errorf("failed to open browser: %s", err)
+	}
 	return nil
 }
 

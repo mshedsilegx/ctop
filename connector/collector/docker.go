@@ -37,7 +37,9 @@ func (c *Docker) Start() {
 			Stream: true,
 			Done:   c.done,
 		}
-		c.client.Stats(opts)
+		if err := c.client.Stats(opts); err != nil {
+			log.Errorf("collector failed for container %s: %s", c.id, err)
+		}
 		c.running = false
 	}()
 

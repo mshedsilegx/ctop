@@ -1,11 +1,9 @@
 //go:build linux
-// +build linux
 
 package connector
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sync"
@@ -38,7 +36,7 @@ func NewRuncOpts() (RuncOpts, error) {
 	opts.root = abs
 
 	// ensure runc root path is readable
-	_, err = ioutil.ReadDir(opts.root)
+	_, err = os.ReadDir(opts.root)
 	if err != nil {
 		return opts, err
 	}
@@ -140,7 +138,7 @@ func (cm *Runc) refresh(id string) {
 	if err != nil {
 		log.Warningf("failed to read state for container: %s\n", err)
 	} else {
-		c.SetMeta("created", state.BaseState.Created.Format("Mon Jan 2 15:04:05 2006"))
+		c.SetMeta("created", state.Created.Format("Mon Jan 2 15:04:05 2006"))
 	}
 
 	conf := libc.Config()
@@ -149,7 +147,7 @@ func (cm *Runc) refresh(id string) {
 
 // Read runc root, creating any new containers
 func (cm *Runc) refreshAll() {
-	list, err := ioutil.ReadDir(cm.opts.root)
+	list, err := os.ReadDir(cm.opts.root)
 	if err != nil {
 		log.Errorf("%s (%T)", err.Error(), err)
 		close(cm.closed)

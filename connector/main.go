@@ -38,7 +38,7 @@ type ConnectorSuper struct {
 func NewConnectorSuper(connFn ConnectorFn) *ConnectorSuper {
 	cs := &ConnectorSuper{
 		connFn: connFn,
-		err:    fmt.Errorf("connecting..."),
+		err:    fmt.Errorf("connecting"),
 	}
 	go cs.loop()
 	return cs
@@ -79,7 +79,7 @@ func (cs *ConnectorSuper) loop() {
 
 			// wait until connection closed
 			cs.conn.Wait()
-			cs.setError(fmt.Errorf("attempting to reconnect..."))
+			cs.setError(fmt.Errorf("attempting to reconnect"))
 			log.Infof("connector closed")
 		}
 	}
@@ -87,7 +87,7 @@ func (cs *ConnectorSuper) loop() {
 
 // Enabled returns names for all enabled connectors on the current platform
 func Enabled() (a []string) {
-	for k, _ := range enabled {
+	for k := range enabled {
 		a = append(a, k)
 	}
 	sort.Strings(a)

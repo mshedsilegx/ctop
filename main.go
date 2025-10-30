@@ -135,8 +135,6 @@ func panicExit() {
 	if r := recover(); r != nil {
 		Shutdown()
 		panic(r)
-		fmt.Printf("error: %s\n", r)
-		os.Exit(1)
 	}
 }
 

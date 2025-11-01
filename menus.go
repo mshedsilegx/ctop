@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"runtime"
 	"strings"
 	"time"
 
@@ -381,10 +382,15 @@ func ExecShell() MenuFn {
 	//  2. Find user's line in /etc/passwd by grep
 	//  3. Extract default user's shell by cutting seven's column separated by :
 	//  4. Execute the shell path with eval
-	if err := c.Exec([]string{"/bin/sh", "-c", "printf '\\e[0m\\e[?25h' && clear && eval `grep ^$(id -un): /etc/passwd | cut -d : -f 7-`"}); err != nil {
+	shell := []string{"/bin/sh", "-c", "printf '\\e[0m\\e[?25h' && clear && eval `grep ^$(id -un): /etc/passwd | cut -d : -f 7-`"}
+	if runtime.GOOS == "windows" {
+		shell = []string{"cmd.exe", "/c", "cls && cmd.exe"}
+	}
+	if err := c.Exec(shell); err != nil {
 		log.StatusErr(err)
 	}
 
+	RefreshDisplay()
 	return nil
 }
 

@@ -390,7 +390,11 @@ func ExecShell() MenuFn {
 		log.StatusErr(err)
 	}
 
-	RefreshDisplay()
+	if runtime.GOOS == "windows" {
+		if err := RefreshDisplay(); err != nil {
+			log.StatusErr(err)
+		}
+	}
 	return nil
 }
 

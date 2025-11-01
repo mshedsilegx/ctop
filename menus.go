@@ -382,18 +382,24 @@ func ExecShell() MenuFn {
 	//  2. Find user's line in /etc/passwd by grep
 	//  3. Extract default user's shell by cutting seven's column separated by :
 	//  4. Execute the shell path with eval
-	shell := []string{"/bin/sh", "-c", "printf '\\e[0m\\e[?25h' && clear && eval `grep ^$(id -un): /etc/passwd | cut -d : -f 7-`"}
+	var shell []string
 	if runtime.GOOS == "windows" {
-		shell = []string{"cmd.exe", "/c", "cls && cmd.exe"}
+		shell = []string{"cmd.exe"}
+	} else {
+		shell = []string{"/bin/sh", "-c", "printf '\\e[0m\\e[?25h' && clear && eval `grep ^$(id -un): /etc/passwd | cut -d : -f 7-`"}
 	}
+
+	ui.Close()
 	if err := c.Exec(shell); err != nil {
 		log.StatusErr(err)
 	}
 
-	if runtime.GOOS == "windows" {
-		if err := RefreshDisplay(); err != nil {
-			log.StatusErr(err)
-		}
+	if err := ui.Init(); err != nil {
+		panic(err)
+	}
+
+	if err := RefreshDisplay(); err != nil {
+		log.StatusErr(err)
 	}
 	return nil
 }

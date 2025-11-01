@@ -384,12 +384,17 @@ func ExecShell() MenuFn {
 	//  4. Execute the shell path with eval
 	shell := []string{"/bin/sh", "-c", "printf '\\e[0m\\e[?25h' && clear && eval `grep ^$(id -un): /etc/passwd | cut -d : -f 7-`"}
 	if runtime.GOOS == "windows" {
-		shell = []string{"cmd.exe"}
+		shell = []string{"cmd.exe", "/c", "cls && cmd.exe"}
 	}
 	if err := c.Exec(shell); err != nil {
 		log.StatusErr(err)
 	}
 
+	if runtime.GOOS == "windows" {
+		if err := RefreshDisplay(); err != nil {
+			log.StatusErr(err)
+		}
+	}
 	return nil
 }
 
